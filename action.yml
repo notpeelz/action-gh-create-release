@@ -9,16 +9,25 @@ branding:
 outputs:
   release_id:
     description: |
-      The identifier of the release that was created.
+      The unique identifier of the release that was created.
+      See https://docs.github.com/en/rest/releases/releases#get-a-release
 inputs:
   token:
-    description: "GitHub access token"
-    required: true
+    description: |
+      GitHub access token
+    required: false
+    default: "${{ github.token }}"
+  repository:
+    description: |
+      The repository where the release should be created.
+      For example, `octocat/hello-world`
+    required: false
+    default: "${{ github.repository }}"
   ref:
     description: |
-      The git ref used to create the tag and release.
-      If not specified, defaults to the commit SHA that triggered the workflow.
+      The git ref used to create the tag.
     required: false
+    default: "${{ github.sha }}"
   tag:
     description: |
       The name of the tag associated with the release.

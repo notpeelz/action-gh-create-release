@@ -4,40 +4,13 @@ A GitHub action to automate the creation of releases.
 
 Source code available at https://github.com/notpeelz/github-create-release
 
-## Usage
-
-```yaml
-on:
-  workflow_dispatch:
-    inputs:
-      version:
-        description: "Version"
-        required: true
-        type: string
-
-jobs:
-  publish-release:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout branch
-        uses: actions/checkout@v3
-      - uses: notpeelz/action-gh-create-release@v1.0.2
-        with:
-          token: ${{ github.token }}
-          tag: v${{ inputs.version }}
-          title: v${{ inputs.version }}
-          files: |
-            file1.txt
-            file2.txt
-```
-
 ## Parameters
 
 | Parameter | Description | Default |
 |-----------|-------------|---------|
-| `token`[^required] | GitHub access token |  |
-| `ref` | The git ref used to create the tag and release.<br/>If not specified, defaults to the commit SHA that triggered the workflow.<br/> |  |
+| `token` | GitHub access token<br/> | `${{ github.token }}` |
+| `repository` | The repository where the release should be created.<br/>For example, `octocat/hello-world`<br/> | `${{ github.repository }}` |
+| `ref` | The git ref used to create the tag.<br/> | `${{ github.sha }}` |
 | `tag`[^required] | The name of the tag associated with the release.<br/> |  |
 | `tagMessage` | The message associated with the tag (defaults to the name of the tag)<br/> |  |
 | `strategy` | Determines what should be done if the tag already exists.<br/>Possible values:<br/>  `failFast` - if the tag already exists, aborts the release creation<br/>  `useExisting` - uses an existing tag (`ref` parameter is ignored)<br/>  `skip` - if the tag already exists, do nothing<br/>  `replace` - replaces the tag along with associated releases<br/> | `failFast` |
@@ -56,4 +29,68 @@ jobs:
 
 | Parameter | Description |
 |-----------|-------------|
-| `release_id` | The identifier of the release that was created.<br/> |
+| `release_id` | The unique identifier of the release that was created.<br/>See https://docs.github.com/en/rest/releases/releases#get-a-release<br/> |
+
+## Examples
+
+### Publish release when new tags are pushed
+
+```yaml
+name: Publish release
+
+on:
+  push:
+    tags:
+      - "*"
+
+jobs:
+  publish-release:
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v')
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v3
+      - name: Build
+        run: |
+          echo "stuff!" > file1.txt
+          echo "more stuff!" > file2.txt
+          echo "even more stuff!" > even_more_stuff.txt
+          echo "even more stuff! (#2)" > even_more_stuff_v2.txt
+      - uses: notpeelz/action-gh-create-release@v1.1.0
+        with:
+          strategy: existing
+          tag: ${{ github.ref_name }}
+          title: ${{ github.ref_name }}
+          files: |
+            file*.txt
+            even_more_stuff{,_v2}.txt
+```
+
+### Publish release via manual workflow run
+
+```yaml
+name: Create release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version"
+        required: true
+        type: string
+
+jobs:
+  create-release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v3
+      - uses: notpeelz/action-gh-create-release@v1.1.0
+        with:
+          strategy: failFast # this is the default
+          # TODO: it's probably a good idea to validate the version format
+          # in an earlier step.
+          tag: v${{ inputs.version }}
+          title: v${{ inputs.version }}
+```
