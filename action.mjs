@@ -31314,7 +31314,6 @@ function getRepo() {
 }
 var Strategy = /* @__PURE__ */ ((Strategy2) => {
   Strategy2["Replace"] = "replace";
-  Strategy2["Skip"] = "skip";
   Strategy2["FailFast"] = "failFast";
   Strategy2["UseExistingTag"] = "useExistingTag";
   return Strategy2;
@@ -31363,12 +31362,6 @@ async function run() {
       repo: config.repo,
       ref: `tags/${config.tag}`
     });
-    if (config.strategy === "skip" /* Skip */) {
-      logger.info(
-        `tag "${config.tag}" already exists; skipping release creation`
-      );
-      return;
-    }
     if (config.strategy === "failFast" /* FailFast */) {
       logger.error(`tag "${config.tag}" already exists`);
       process.exit(1);
