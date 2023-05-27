@@ -12,15 +12,15 @@ Source code available at https://github.com/notpeelz/github-create-release
 | `repository` | The repository where the release should be created.<br/>For example, `octocat/hello-world`<br/> | `${{ github.repository }}` |
 | `ref` | The git ref used to create the tag.<br/> | `${{ github.sha }}` |
 | `tag`[^required] | The name of the tag associated with the release.<br/> |  |
-| `tagMessage` | The message associated with the tag (defaults to the name of the tag)<br/> |  |
-| `strategy` | Determines what should be done if the tag already exists.<br/>Possible values:<br/>  `failFast` - aborts with an error if the tag already exists<br/>  `useExistingTag` - uses an existing tag, replacing associated releases (`ref` parameter is ignored)<br/>  `replace` - replaces the tag along with associated releases<br/> | `failFast` |
+| `tag-message` | The message associated with the tag (defaults to the name of the tag)<br/> |  |
+| `strategy` | Determines what should be done if the tag already exists.<br/>Possible values:<br/>  `fail-fast` - aborts with an error if the tag already exists<br/>  `use-existing-tag` - uses an existing tag, replacing associated releases (`ref` parameter is ignored)<br/>  `replace` - replaces the tag along with associated releases<br/> | `fail-fast` |
 | `title` | The title of the release.<br/> |  |
-| `title_source` | Determines where the the title should be read from.<br/>Possible values:<br/>  `literal` - uses the "title" parameter as-is<br/>  `file` - reads from the file specified in the "title" parameter<br/>  `env` - reads from the environment variable specified in the "title" parameter<br/> | `literal` |
+| `title-source` | Determines where the the title should be read from.<br/>Possible values:<br/>  `literal` - uses the "title" parameter as-is<br/>  `file` - reads from the file specified in the "title" parameter<br/>  `env` - reads from the environment variable specified in the "title" parameter<br/> | `literal` |
 | `body` | The message associated with the release.<br/> |  |
-| `body_source` | Determines where the the body should be read from.<br/>Possible values:<br/>  `literal` - uses the "body" parameter as-is<br/>  `file` - reads from the file specified in the "body" parameter<br/>  `env` - reads from the environment variable specified in the "body" parameter<br/> | `literal` |
+| `body-source` | Determines where the the body should be read from.<br/>Possible values:<br/>  `literal` - uses the "body" parameter as-is<br/>  `file` - reads from the file specified in the "body" parameter<br/>  `env` - reads from the environment variable specified in the "body" parameter<br/> | `literal` |
 | `prerelease` | If true, the release will be marked as a pre-release.<br/> |  |
 | `draft` | If true, the release will be made into a draft. |  |
-| `discussion_category_name` | If specified, a discussion of the specified category is created and<br/>linked to the release.<br/> |  |
+| `discussion-category-name` | If specified, a discussion of the specified category is created and<br/>linked to the release.<br/> |  |
 | `files` | Newline-separated list of files to upload (supports globbing).<br/>Missing files are ignored.<br/> |  |
 
 [^required]: required
@@ -29,7 +29,7 @@ Source code available at https://github.com/notpeelz/github-create-release
 
 | Parameter | Description |
 |-----------|-------------|
-| `release_id` | The unique identifier of the release that was created.<br/>See https://docs.github.com/en/rest/releases/releases#get-a-release<br/> |
+| `release-id` | The unique identifier of the release that was created.<br/>See https://docs.github.com/en/rest/releases/releases#get-a-release<br/> |
 
 ## Examples
 
@@ -56,7 +56,7 @@ jobs:
           echo "more stuff!" > file2.txt
           echo "even more stuff!" > even_more_stuff.txt
           echo "even more stuff! (#2)" > even_more_stuff_v2.txt
-      - uses: notpeelz/action-gh-create-release@v3.0.0
+      - uses: notpeelz/action-gh-create-release@v4.0.0
         with:
           strategy: existing
           tag: ${{ github.ref_name }}
@@ -86,9 +86,9 @@ jobs:
     steps:
       - name: Checkout branch
         uses: actions/checkout@v3
-      - uses: notpeelz/action-gh-create-release@v3.0.0
+      - uses: notpeelz/action-gh-create-release@v4.0.0
         with:
-          strategy: failFast # this is the default
+          strategy: fail-fast # this is the default
           # TODO: it's probably a good idea to validate the version format
           # in an earlier step.
           tag: v${{ inputs.version }}

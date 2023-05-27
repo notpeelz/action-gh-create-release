@@ -31244,7 +31244,7 @@ function unreachable() {
 // src/main.mts
 var logger = createLogger();
 async function getTitle() {
-  const source = getEnumInput("title_source", ["literal", "file", "env"], true);
+  const source = getEnumInput("title-source", ["literal", "file", "env"], true);
   switch (source) {
     case "literal": {
       return getInput("title", false);
@@ -31269,7 +31269,7 @@ async function getTitle() {
   }
 }
 async function getBody() {
-  const source = getEnumInput("body_source", ["literal", "file", "env"], true);
+  const source = getEnumInput("body-source", ["literal", "file", "env"], true);
   switch (source) {
     case "literal": {
       return getInput("body", false);
@@ -31314,22 +31314,22 @@ function getRepo() {
 }
 var Strategy = /* @__PURE__ */ ((Strategy2) => {
   Strategy2["Replace"] = "replace";
-  Strategy2["FailFast"] = "failFast";
-  Strategy2["UseExistingTag"] = "useExistingTag";
+  Strategy2["FailFast"] = "fail-fast";
+  Strategy2["UseExistingTag"] = "use-existing-tag";
   return Strategy2;
 })(Strategy || {});
 async function getConfig() {
   const [owner, repo] = getRepo();
   const ref = getInput("ref", true);
   const tag = getInput("tag", true);
-  const tagMessage = getInput("tagMessage") || tag;
+  const tagMessage = getInput("tag-message") || tag;
   const strategy = getEnumInput("strategy", Object.values(Strategy), true);
   const title = await getTitle() ?? "";
   const body = await getBody() ?? "";
   const prerelease = getBooleanInput("prerelease") ?? false;
   const draft = getBooleanInput("draft") ?? false;
   const files = getMultilineInput("files") ?? [];
-  const discussionCategoryName = getInput("discussion_category_name");
+  const discussionCategoryName = getInput("discussion-category-name");
   return {
     ref,
     owner,
@@ -31362,7 +31362,7 @@ async function run() {
       repo: config.repo,
       ref: `tags/${config.tag}`
     });
-    if (config.strategy === "failFast" /* FailFast */) {
+    if (config.strategy === "fail-fast" /* FailFast */) {
       logger.error(`tag "${config.tag}" already exists`);
       process.exit(1);
     }
@@ -31402,7 +31402,7 @@ async function run() {
   }
   let undoTag;
   const existingTagSha = (_b = (_a2 = existingTag == null ? void 0 : existingTag.data) == null ? void 0 : _a2.object) == null ? void 0 : _b.sha;
-  if (config.strategy === "useExistingTag" /* UseExistingTag */) {
+  if (config.strategy === "use-existing-tag" /* UseExistingTag */) {
     undoTag = async function() {
     };
   } else if (existingTagSha != null) {
@@ -31551,7 +31551,7 @@ async function run() {
       process.exit(1);
     }
   }
-  setOutput("release_id", releaseId);
+  setOutput("release-id", releaseId);
 }
 async function runWithRetry(attempts, maxDelay, f, onError) {
   for (let i = 0; i < attempts; i++) {
