@@ -8,12 +8,12 @@ Source code available at https://github.com/notpeelz/github-create-release
 
 | Parameter | Description | Default |
 |-----------|-------------|---------|
-| `token` | GitHub access token<br/> | `${{ github.token }}` |
+| `token` | The GitHub access token.<br/> | `${{ github.token }}` |
 | `repository` | The repository where the release should be created.<br/>For example, `octocat/hello-world`<br/> | `${{ github.repository }}` |
 | `ref` | The git ref used to create the tag.<br/> | `${{ github.sha }}` |
 | `tag`[^required] | The name of the tag associated with the release.<br/> |  |
 | `tagMessage` | The message associated with the tag (defaults to the name of the tag)<br/> |  |
-| `strategy` | Determines what should be done if the tag already exists.<br/>Possible values:<br/>  `failFast` - if the tag already exists, aborts the release creation<br/>  `useExisting` - uses an existing tag (`ref` parameter is ignored)<br/>  `skip` - if the tag already exists, do nothing<br/>  `replace` - replaces the tag along with associated releases<br/> | `failFast` |
+| `strategy` | Determines what should be done if the tag already exists.<br/>Possible values:<br/>  `failFast` - if the tag already exists, aborts with an error<br/>  `skip` - if the tag already exists, aborts gracefully (no error)<br/>  `useExistingTag` - uses an existing tag, replacing associated releases (`ref` parameter is ignored)<br/>  `replace` - replaces the tag along with its associated releases<br/> | `failFast` |
 | `title` | The title of the release.<br/> |  |
 | `title_source` | Determines where the the title should be read from.<br/>Possible values:<br/>  `literal` - uses the "title" parameter as-is<br/>  `file` - reads from the file specified in the "title" parameter<br/>  `env` - reads from the environment variable specified in the "title" parameter<br/> | `literal` |
 | `body` | The message associated with the release.<br/> |  |
@@ -56,7 +56,7 @@ jobs:
           echo "more stuff!" > file2.txt
           echo "even more stuff!" > even_more_stuff.txt
           echo "even more stuff! (#2)" > even_more_stuff_v2.txt
-      - uses: notpeelz/action-gh-create-release@v1.1.0
+      - uses: notpeelz/action-gh-create-release@v2.0.0
         with:
           strategy: existing
           tag: ${{ github.ref_name }}
@@ -86,7 +86,7 @@ jobs:
     steps:
       - name: Checkout branch
         uses: actions/checkout@v3
-      - uses: notpeelz/action-gh-create-release@v1.1.0
+      - uses: notpeelz/action-gh-create-release@v2.0.0
         with:
           strategy: failFast # this is the default
           # TODO: it's probably a good idea to validate the version format
