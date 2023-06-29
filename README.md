@@ -10,7 +10,7 @@ Source code available at https://github.com/notpeelz/github-create-release
 |-----------|-------------|---------|
 | `token` | The GitHub access token.<br/> | `${{ github.token }}` |
 | `repository` | The repository where the release should be created.<br/>For example, `octocat/hello-world`<br/> | `${{ github.repository }}` |
-| `target` | The git object to tag. This can be a SHA or a ref to a git object.<br/> | `${{ github.sha }}` |
+| `target` | The git object to tag. This can be a SHA or a ref to a git object.<br/> |  |
 | `tag`[^required] | The name of the tag associated with the release.<br/> |  |
 | `tag-message` | The message associated with the tag (defaults to the name of the tag)<br/> |  |
 | `strategy` | Determines what should be done if the tag already exists.<br/>Possible values:<br/>  `fail-fast` - aborts with an error if the tag already exists<br/>  `use-existing-tag` - uses an existing tag, replacing associated releases (`target` parameter is ignored)<br/>  `replace` - replaces the tag along with associated releases<br/> | `fail-fast` |
@@ -56,7 +56,7 @@ jobs:
           echo "more stuff!" > file2.txt
           echo "even more stuff!" > even_more_stuff.txt
           echo "even more stuff! (#2)" > even_more_stuff_v2.txt
-      - uses: notpeelz/action-gh-create-release@v5.0.0
+      - uses: notpeelz/action-gh-create-release@v5.0.1
         with:
           strategy: existing
           tag: ${{ github.ref_name }}
@@ -86,7 +86,7 @@ jobs:
     steps:
       - name: Checkout branch
         uses: actions/checkout@v3
-      - uses: notpeelz/action-gh-create-release@v5.0.0
+      - uses: notpeelz/action-gh-create-release@v5.0.1
         with:
           strategy: fail-fast # this is the default
           # TODO: it's probably a good idea to validate the version format
